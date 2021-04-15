@@ -31,52 +31,58 @@ class CopomCalendarTest(unittest.TestCase):
         data_inicial = date.today() + timedelta(days=365)
         data_fim = date.today() + timedelta(days=366)
         self._next_year_case = CopomCalendar(data_inicial, data_fim)
+        # cenário com data inicial menor que final
+        data_fim = date.today()
+        data_inicial = data_fim + timedelta(days=1)
+        self._inicio_gt_fim = CopomCalendar(data_inicial, data_fim)
 
     def tearDown(self) -> None:
         pass
 
-    def test_inicio_gte_fim_raises_value_error(self):
-        data_fim = date.today()
-        data_inicial = data_fim + timedelta(days=1)
-        with self.assertRaises(ValueError):
-            CopomCalendar(data_inicial, data_fim)
+    def test_has_events_inicio_gt_fim_is_false(self):
+        flag = self._inicio_gt_fim.has_new_events
+        self.assertFalse(flag)
 
-    def test_number_of_events_base_case_is_ok(self):
-        eventos = self._base_case.number_of_events()
+    def test_number_of_events_inicio_gt_fim_ok(self):
+        eventos = self._inicio_gt_fim.number_of_events
+        self.assertEqual(0, eventos)
+
+    def test_number_of_events_base_case_is_zero(self):
+        eventos = self._base_case.number_of_events
         self.assertEqual(3, eventos)
 
     def test_has_events_base_case_is_ok(self):
-        flag = self._base_case.has_events()
+        flag = self._base_case.has_new_events
         self.assertTrue(flag)
 
     def test_has_events_has_no_events_case_is_false(self):
-        flag = self._has_no_events_case.has_events()
+        flag = self._has_no_events_case.has_new_events
         self.assertFalse(flag)
 
     def test_number_of_events_has_no_events_case_is_zero(self):
-        eventos = self._has_no_events_case.number_of_events()
+        eventos = self._has_no_events_case.number_of_events
         self.assertEqual(0, eventos)
 
     def test_has_events_unique_date_no_events_case_is_false(self):
-        flag = self._unique_date_no_event_case.has_events()
+        flag = self._unique_date_no_event_case.has_new_events
         self.assertFalse(flag)
 
     def test_number_of_events_unique_date_no_events_case_is_zero(self):
-        eventos = self._unique_date_no_event_case.number_of_events()
+        eventos = self._unique_date_no_event_case.number_of_events
         self.assertEqual(0, eventos)
 
     def test_has_events_unique_date_with_event_case_is_false(self):
-        flag = self._unique_date_with_event_case.has_events()
+        flag = self._unique_date_with_event_case.has_new_events
         self.assertFalse(flag)
 
     def test_number_of_events_unique_with_event_case_is_0(self):
-        eventos = self._unique_date_with_event_case.number_of_events()
+        eventos = self._unique_date_with_event_case.number_of_events
         self.assertEqual(0, eventos)
 
     def test_has_events_next_year_case_is_false(self):
-        flag = self._next_year_case.has_events()
+        flag = self._next_year_case.has_new_events
         self.assertFalse(flag)
 
     def test_number_of_events_next_year_case_is_zero(self):
-        eventos = self._next_year_case.number_of_events()
+        eventos = self._next_year_case.number_of_events
         self.assertEqual(0, eventos)
