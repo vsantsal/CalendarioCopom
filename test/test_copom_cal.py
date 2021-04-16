@@ -44,11 +44,11 @@ class CopomCalendarTest(unittest.TestCase):
         self.assertFalse(flag)
 
     def test_number_of_events_inicio_gt_fim_ok(self):
-        eventos = self._inicio_gt_fim.number_of_events
+        eventos = len(self._inicio_gt_fim)
         self.assertEqual(0, eventos)
 
     def test_number_of_events_base_case_is_zero(self):
-        eventos = self._base_case.number_of_events
+        eventos = len(self._base_case)
         self.assertEqual(3, eventos)
 
     def test_has_events_base_case_is_ok(self):
@@ -60,7 +60,7 @@ class CopomCalendarTest(unittest.TestCase):
         self.assertFalse(flag)
 
     def test_number_of_events_has_no_events_case_is_zero(self):
-        eventos = self._has_no_events_case.number_of_events
+        eventos = len(self._has_no_events_case)
         self.assertEqual(0, eventos)
 
     def test_has_events_unique_date_no_events_case_is_false(self):
@@ -68,7 +68,7 @@ class CopomCalendarTest(unittest.TestCase):
         self.assertFalse(flag)
 
     def test_number_of_events_unique_date_no_events_case_is_zero(self):
-        eventos = self._unique_date_no_event_case.number_of_events
+        eventos = len(self._unique_date_no_event_case)
         self.assertEqual(0, eventos)
 
     def test_has_events_unique_date_with_event_case_is_false(self):
@@ -76,7 +76,7 @@ class CopomCalendarTest(unittest.TestCase):
         self.assertFalse(flag)
 
     def test_number_of_events_unique_with_event_case_is_0(self):
-        eventos = self._unique_date_with_event_case.number_of_events
+        eventos = len(self._unique_date_with_event_case)
         self.assertEqual(0, eventos)
 
     def test_has_events_next_year_case_is_false(self):
@@ -84,5 +84,5 @@ class CopomCalendarTest(unittest.TestCase):
         self.assertFalse(flag)
 
     def test_number_of_events_next_year_case_is_zero(self):
-        eventos = self._next_year_case.number_of_events
+        eventos = len(self._next_year_case)
         self.assertEqual(0, eventos)

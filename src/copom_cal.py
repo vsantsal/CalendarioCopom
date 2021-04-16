@@ -13,6 +13,12 @@ class CopomCalendar:
         self._url = ''
         self._chave_conteudo = 'conteudo'
 
+    def __len__(self):
+
+        self._process_new_request()
+
+        return len(self._cache[self._url])
+
     @property
     def has_new_events(self) -> bool:
 
@@ -20,13 +26,6 @@ class CopomCalendar:
 
         # retorna se há eventos no período
         return len(self._cache[self._url]) > 0
-
-    @property
-    def number_of_events(self) -> int:
-
-        self._process_new_request()
-
-        return len(self._cache[self._url])
 
     @property
     def inicio_agenda(self) -> date:
@@ -46,12 +45,12 @@ class CopomCalendar:
 
     def _process_new_request(self):
 
-        # verifica se datas estão coerentes (inicio_agenda <= fim_agenda)
-        self._check_date_values()
-
         # url para requisição solicitada
         url = self._url_base.format(data1=self._inicio_agenda.isoformat(),
                                     data2=self._fim_agenda.isoformat())
+
+        # verifica se datas estão coerentes (inicio_agenda <= fim_agenda)
+        self._check_date_values()
 
         # adiciona ao calendário, se necessário
         self._add_calendar(url)
