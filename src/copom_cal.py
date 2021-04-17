@@ -67,7 +67,7 @@ class CopomCalendar:
         except AttributeError:
             raise TypeError("{} and {} must both be date!".
                             format(self._inicio_agenda, self.fim_agenda))
-        
+
         # adiciona ao calendário, se necessário
         self._add_calendar(url)
 
