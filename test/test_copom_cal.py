@@ -43,23 +43,23 @@ class CopomCalendarTest(unittest.TestCase):
         flag = self._inicio_gt_fim.has_new_events
         self.assertFalse(flag)
 
-    def test_number_of_events_inicio_gt_fim_ok(self):
+    def test_len_inicio_gt_fim_ok(self):
         eventos = len(self._inicio_gt_fim)
         self.assertEqual(0, eventos)
-
-    def test_number_of_events_base_case_is_zero(self):
-        eventos = len(self._base_case)
-        self.assertEqual(3, eventos)
 
     def test_has_events_base_case_is_ok(self):
         flag = self._base_case.has_new_events
         self.assertTrue(flag)
 
+    def test_len_base_case_is_zero(self):
+        eventos = len(self._base_case)
+        self.assertEqual(3, eventos)
+
     def test_has_events_has_no_events_case_is_false(self):
         flag = self._has_no_events_case.has_new_events
         self.assertFalse(flag)
 
-    def test_number_of_events_has_no_events_case_is_zero(self):
+    def test_len_has_no_events_case_is_zero(self):
         eventos = len(self._has_no_events_case)
         self.assertEqual(0, eventos)
 
@@ -67,7 +67,7 @@ class CopomCalendarTest(unittest.TestCase):
         flag = self._unique_date_no_event_case.has_new_events
         self.assertFalse(flag)
 
-    def test_number_of_events_unique_date_no_events_case_is_zero(self):
+    def test_len_unique_date_no_events_case_is_zero(self):
         eventos = len(self._unique_date_no_event_case)
         self.assertEqual(0, eventos)
 
@@ -75,7 +75,7 @@ class CopomCalendarTest(unittest.TestCase):
         flag = self._unique_date_with_event_case.has_new_events
         self.assertFalse(flag)
 
-    def test_number_of_events_unique_with_event_case_is_0(self):
+    def test_len_unique_with_event_case_is_0(self):
         eventos = len(self._unique_date_with_event_case)
         self.assertEqual(0, eventos)
 
@@ -83,6 +83,10 @@ class CopomCalendarTest(unittest.TestCase):
         flag = self._next_year_case.has_new_events
         self.assertFalse(flag)
 
-    def test_number_of_events_next_year_case_is_zero(self):
+    def test_len_next_year_case_is_zero(self):
         eventos = len(self._next_year_case)
         self.assertEqual(0, eventos)
+
+    def test_has_events_as_dict_base_case(self):
+        for event in self._base_case:
+            self.assertIsInstance(event, dict)

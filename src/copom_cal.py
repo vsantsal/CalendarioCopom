@@ -14,14 +14,22 @@ class CopomCalendar:
         self._chave_conteudo = 'conteudo'
 
     def __len__(self):
-
         self._process_new_request()
 
         return len(self._cache[self._url])
 
+    def __str__(self):
+        self._process_new_request()
+
+        return self._url
+
+    def __getitem__(self, item):
+        self._process_new_request()
+
+        return self._cache[self._url][item]
+
     @property
     def has_new_events(self) -> bool:
-
         self._process_new_request()
 
         # retorna se há eventos no período
@@ -39,12 +47,15 @@ class CopomCalendar:
     def inicio_agenda(self, data: date):
         self._inicio_agenda = data
 
+        self._process_new_request()
+
     @fim_agenda.setter
     def fim_agenda(self, data: date):
         self._fim_agenda = data
 
-    def _process_new_request(self):
+        self._process_new_request()
 
+    def _process_new_request(self):
         # url para requisição solicitada
         url = self._url_base.format(data1=self._inicio_agenda.isoformat(),
                                     data2=self._fim_agenda.isoformat())
@@ -59,7 +70,6 @@ class CopomCalendar:
         self._url = url
 
     def _add_calendar(self, url: str):
-
         if url not in self._cache.keys():
             response = requests.get(url)
 
@@ -70,3 +80,11 @@ class CopomCalendar:
     def _check_date_values(self):
         if self._inicio_agenda > self._fim_agenda:
             self._cache[self._url] = {}
+
+
+if __name__ == '__main__':
+    copom = CopomCalendar(inicio_agenda=date(2021, 4, 15),
+                          fim_agenda=date(2021, 6, 14))
+
+    for reuniao in copom:
+        print(reuniao)
