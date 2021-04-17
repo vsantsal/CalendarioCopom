@@ -1,4 +1,4 @@
-from CopomCalendar.src.copom_cal import CopomCalendar
+from src.copom_cal import CopomCalendar
 from datetime import date, timedelta
 import requests
 from unittest.mock import patch
