@@ -1,5 +1,7 @@
 from CopomCalendar.src.copom_cal import CopomCalendar
 from datetime import date, timedelta
+import requests
+from unittest.mock import patch
 import unittest
 
 
@@ -51,6 +53,10 @@ class CopomCalendarTest(unittest.TestCase):
         data_inicial = None
         data_fim = date.today()
         self._inicio_agenda_none = CopomCalendar(data_inicial, data_fim)
+        # cenário com datas = str
+        data_inicial = '2021-07-21'
+        data_fim = '2021-07-28'
+        self._datas_str = CopomCalendar(data_inicial, data_fim)
 
     def tearDown(self) -> None:
         pass
@@ -136,3 +142,17 @@ class CopomCalendarTest(unittest.TestCase):
     def test_len_inicio_agenda_none_raise_type_error(self):
         with self.assertRaises(TypeError):
             eventos = len(self._inicio_agenda_none)
+
+    @patch('requests.get')
+    def test_connection_error(self, mock_requests_get):
+        mock_requests_get.side_effect = requests.exceptions.ConnectionError()
+        with self.assertRaises(ConnectionError):
+            eventos = len(self._base_case)
+
+    def test_has_events_datas_str_raises_type_error(self):
+        with self.assertRaises(TypeError):
+            flag = self._datas_str.has_new_events
+
+    def test_len_datas_str_raises_type_error(self):
+        with self.assertRaises(TypeError):
+            eventos = len(self._datas_str)

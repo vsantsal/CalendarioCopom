@@ -56,13 +56,18 @@ class CopomCalendar:
         self._process_new_request()
 
     def _process_new_request(self):
+
         # verifica se datas estão coerentes (inicio_agenda <= fim_agenda)
-        self._check_date_values()
+        # self._check_date_values()
 
-        # url para requisição solicitada
-        url = self._url_base.format(data1=self._inicio_agenda.isoformat(),
-                                    data2=self._fim_agenda.isoformat())
-
+        try:
+            # url para requisição solicitada
+            url = self._url_base.format(data1=self._inicio_agenda.isoformat(),
+                                        data2=self._fim_agenda.isoformat())
+        except AttributeError:
+            raise TypeError("{} and {} must both be date!".
+                            format(self._inicio_agenda, self.fim_agenda))
+        
         # adiciona ao calendário, se necessário
         self._add_calendar(url)
 
@@ -71,15 +76,17 @@ class CopomCalendar:
 
     def _add_calendar(self, url: str):
         if url not in self._cache.keys():
-            response = requests.get(url)
 
-            if response.status_code == 200:
-                json_data = json.loads(response.text)
-                self._cache[url] = json_data[self._chave_conteudo]
+            try:
+                response = requests.get(url)
+
+                if response.status_code == 200:
+                    json_data = json.loads(response.text)
+                    self._cache[url] = json_data[self._chave_conteudo]
+            except requests.exceptions.ConnectionError:
+                print("Unnable to connect to {}".format(url))
+                raise ConnectionError
 
     def _check_date_values(self):
-        if not isinstance(self._inicio_agenda, date) and not isinstance(self._fim_agenda, date):
-            raise TypeError
-
         if self._inicio_agenda > self._fim_agenda:
             self._cache[self._url] = {}
