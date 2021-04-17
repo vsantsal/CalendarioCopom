@@ -35,6 +35,15 @@ class CopomCalendarTest(unittest.TestCase):
         data_fim = date.today()
         data_inicial = data_fim + timedelta(days=1)
         self._inicio_gt_fim = CopomCalendar(data_inicial, data_fim)
+        # cenário com data inicial no futuro
+        # 366 + 185 para garantir data de período
+        # ainda sem definição de calendário
+        # (de acordo com a circular, o calendário do ano
+        # seguinte é divulgado até fim de junho
+        data_inicial = date.today() + timedelta(days=551)
+        data_fim = data_inicial + + timedelta(days=15)
+        self._inicio_apos_calendario_conhecido = CopomCalendar(data_inicial, data_fim)
+
 
     def tearDown(self) -> None:
         pass
@@ -90,3 +99,11 @@ class CopomCalendarTest(unittest.TestCase):
     def test_has_events_as_dict_base_case(self):
         for event in self._base_case:
             self.assertIsInstance(event, dict)
+
+    def test_has_events_inicio_apos_calendario_conhecido_is_false(self):
+        flag = self._inicio_apos_calendario_conhecido.has_new_events
+        self.assertFalse(flag)
+
+    def test_len_inicio_apos_calendario_conhecido_is_zero(self):
+        eventos = len(self._inicio_apos_calendario_conhecido)
+        self.assertEqual(0, eventos)
