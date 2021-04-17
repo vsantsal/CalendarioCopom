@@ -43,7 +43,14 @@ class CopomCalendarTest(unittest.TestCase):
         data_inicial = date.today() + timedelta(days=551)
         data_fim = data_inicial + + timedelta(days=15)
         self._inicio_apos_calendario_conhecido = CopomCalendar(data_inicial, data_fim)
-
+        # cenário com datas = None
+        data_inicial = None
+        data_fim = None
+        self._datas_none = CopomCalendar(data_inicial, data_fim)
+        # cenário com inicio_agenda = None
+        data_inicial = None
+        data_fim = date.today()
+        self._inicio_agenda_none = CopomCalendar(data_inicial, data_fim)
 
     def tearDown(self) -> None:
         pass
@@ -107,3 +114,25 @@ class CopomCalendarTest(unittest.TestCase):
     def test_len_inicio_apos_calendario_conhecido_is_zero(self):
         eventos = len(self._inicio_apos_calendario_conhecido)
         self.assertEqual(0, eventos)
+
+    def test_has_events_datas_none_raises_type_error(self):
+        with self.assertRaises(TypeError):
+            flag = self._datas_none.has_new_events
+
+    def test_len_datas_none_raises_type_error(self):
+        with self.assertRaises(TypeError):
+            eventos = len(self._datas_none)
+
+    def test_inicio_agenda_datas_none_is_none(self):
+        self.assertIsNone(self._datas_none.inicio_agenda)
+
+    def test_fim_agenda_datas_none_is_none(self):
+        self.assertIsNone(self._datas_none.fim_agenda)
+
+    def test_has_events_inicio_agenda_none_raises_type_error(self):
+        with self.assertRaises(TypeError):
+            flag = self._inicio_agenda_none.has_new_events
+
+    def test_len_inicio_agenda_none_raise_type_error(self):
+        with self.assertRaises(TypeError):
+            eventos = len(self._inicio_agenda_none)

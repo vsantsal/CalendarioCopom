@@ -56,12 +56,12 @@ class CopomCalendar:
         self._process_new_request()
 
     def _process_new_request(self):
+        # verifica se datas estão coerentes (inicio_agenda <= fim_agenda)
+        self._check_date_values()
+
         # url para requisição solicitada
         url = self._url_base.format(data1=self._inicio_agenda.isoformat(),
                                     data2=self._fim_agenda.isoformat())
-
-        # verifica se datas estão coerentes (inicio_agenda <= fim_agenda)
-        self._check_date_values()
 
         # adiciona ao calendário, se necessário
         self._add_calendar(url)
@@ -78,13 +78,8 @@ class CopomCalendar:
                 self._cache[url] = json_data[self._chave_conteudo]
 
     def _check_date_values(self):
+        if not isinstance(self._inicio_agenda, date) and not isinstance(self._fim_agenda, date):
+            raise TypeError
+
         if self._inicio_agenda > self._fim_agenda:
             self._cache[self._url] = {}
-
-
-if __name__ == '__main__':
-    copom = CopomCalendar(inicio_agenda=date(2021, 4, 15),
-                          fim_agenda=date(2021, 6, 14))
-
-    for reuniao in copom:
-        print(reuniao)
