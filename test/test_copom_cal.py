@@ -1,5 +1,6 @@
 import pytest
-
+import requests
+from unittest.mock import patch
 
 def test_len_base_case_is_3(base_case):
     eventos = len(base_case)
@@ -100,3 +101,10 @@ def test_has_events_datas_str_raises_type_error(datas_str):
 def test_len_datas_str_raises_type_error(datas_str):
     with pytest.raises(TypeError):
         len(datas_str)
+
+
+@patch('requests.get')
+def test_connection_error(mock_requests_get, base_case):
+    mock_requests_get.side_effect = requests.exceptions.ConnectionError()
+    with pytest.raises(ConnectionError):
+        len(base_case)

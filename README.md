@@ -8,7 +8,7 @@ Pode ser utilizada no suporte a cálculos com TMS, para identificar pontos de po
 
 ## Testes
 
-Para realizar os testes, usar unittest:
+Para realizar os testes, usar pytest:
 
-python -m unittest
+python -m pytest
 
