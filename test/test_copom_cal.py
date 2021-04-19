@@ -1,106 +1,73 @@
 import pytest
 import requests
 from unittest.mock import patch
-
-def test_len_base_case_is_3(base_case):
-    eventos = len(base_case)
-    assert eventos == 3
+from datetime import date, timedelta
+from copom_cal import CopomCalendar
 
 
-def test_has_events_base_case_is_ok(base_case):
-    flag = base_case.has_new_events
-    assert flag
+@pytest.mark.parametrize("data_inicial, data_fim, resultado",
+                         [
+                             (date(2021, 4, 15), date(2021, 6, 14), 3),
+                             (date(2021, 4, 15), date(2021, 4, 29), 0),
+                             (date(2021, 4, 16), date(2021, 4, 16), 0),
+                             (date(2021, 6, 15), date(2021, 6, 15), 0),
+                             (date.today() + timedelta(days=365),
+                              date.today() + timedelta(days=366), 0),
+                             (date.today() + timedelta(days=1), date.today(), 0),
+                             (date.today() + timedelta(days=551),
+                              date.today() + timedelta(days=15), 0),
+                         ])
+def test_len_cenarios(data_inicial, data_fim, resultado):
+    cenario = CopomCalendar(data_inicial, data_fim)
+    eventos = len(cenario)
+    assert eventos == resultado
 
 
-def test_len_inicio_gt_fim_ok(inicio_gt_fim):
-    eventos = len(inicio_gt_fim)
-    assert eventos == 0
+@pytest.mark.parametrize("data_inicial, data_fim, resultado",
+                         [
+                             (date(2021, 4, 15), date(2021, 6, 14), True),
+                             (date(2021, 4, 15), date(2021, 4, 29), False),
+                             (date(2021, 4, 16), date(2021, 4, 16), False),
+                             (date(2021, 6, 15), date(2021, 6, 15), False),
+                             (date.today() + timedelta(days=365),
+                              date.today() + timedelta(days=366), False),
+                             (date.today() + timedelta(days=1), date.today(), False),
+                             (date.today() + timedelta(days=551),
+                              date.today() + timedelta(days=15), False),
+                         ])
+def test_has_events_cenarios(data_inicial, data_fim, resultado):
+    cenario = CopomCalendar(data_inicial, data_fim)
+    flag = cenario.has_new_events
+    assert flag == resultado
 
 
-def test_has_events_has_no_events_case_is_false(has_no_events_case):
-    flag = has_no_events_case.has_new_events
-    assert not flag
+@pytest.mark.parametrize("data_inicial, data_fim",
+                         [
+                             (None, date(2021, 6, 14)),
+                             (None, None),
+                             ('2021-07-15', '2021-08-15'),
+                         ])
+def test_has_events_raises_type_error(data_inicial, data_fim):
+    with pytest.raises(TypeError):
+        cenario = CopomCalendar(data_inicial, data_fim)
+        cenario.has_new_events
 
 
-def test_len_has_no_events_case_is_0(has_no_events_case):
-    eventos = len(has_no_events_case)
-    assert eventos == 0
-
-
-def test_has_events_unique_date_no_events_case_is_false(unique_date_no_events_case):
-    flag = unique_date_no_events_case.has_new_events
-    assert not flag
-
-
-def test_len_unique_date_no_events_case_is_0(unique_date_no_events_case):
-    eventos = len(unique_date_no_events_case)
-    assert eventos == 0
-
-
-def test_has_events_unique_date_with_event_case_is_false(unique_date_with_event_case):
-    flag = unique_date_with_event_case.has_new_events
-    assert not flag
-
-
-def test_len_unique_with_event_case_is_0(unique_date_with_event_case):
-    eventos = len(unique_date_with_event_case)
-    assert eventos == 0
-
-
-def test_has_events_next_year_case_is_false(next_year_case):
-    flag = next_year_case.has_new_events
-    assert not flag
-
-
-def test_len_next_year_case_is_zero(next_year_case):
-    eventos = len(next_year_case)
-    assert eventos == 0
+@pytest.mark.parametrize("data_inicial, data_fim",
+                         [
+                             (None, date(2021, 6, 14)),
+                             (None, None),
+                             ('2021-07-15', '2021-08-15'),
+                         ])
+def test_len_raises_type_error(data_inicial, data_fim):
+    with pytest.raises(TypeError):
+        cenario = CopomCalendar(data_inicial, data_fim)
+        len(cenario)
 
 
 def test_has_events_as_dict_base_case(base_case):
     for event in base_case:
         assert isinstance(event, dict)
-
-
-def test_has_events_inicio_apos_calendario_conhecido_is_false(inicio_apos_calendario_conhecido):
-    flag = inicio_apos_calendario_conhecido.has_new_events
-    assert not flag
-
-
-def test_len_inicio_apos_calendario_conhecido_is_zero(inicio_apos_calendario_conhecido):
-    eventos = len(inicio_apos_calendario_conhecido)
-    assert eventos == 0
-
-
-def test_has_events_datas_none_raises_type_error(datas_none):
-
-    with pytest.raises(TypeError):
-        datas_none.has_new_events
-
-
-def test_len_datas_none_raises_type_error(datas_none):
-    with pytest.raises(TypeError):
-        len(datas_none)
-
-
-def test_has_events_inicio_agenda_none_raises_type_error(inicio_agenda_none):
-    with pytest.raises(TypeError):
-        inicio_agenda_none.has_new_events
-
-
-def test_len_inicio_agenda_none_raise_type_error(inicio_agenda_none):
-    with pytest.raises(TypeError):
-        len(inicio_agenda_none)
-
-
-def test_has_events_datas_str_raises_type_error(datas_str):
-    with pytest.raises(TypeError):
-        datas_str.has_new_events
-
-
-def test_len_datas_str_raises_type_error(datas_str):
-    with pytest.raises(TypeError):
-        len(datas_str)
 
 
 @patch('requests.get')

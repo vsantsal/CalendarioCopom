@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 class JsonApi:
     def __init__(self):
         self._url = ''
@@ -30,4 +31,3 @@ class JsonApi:
             except requests.exceptions.ConnectionError:
                 print("Unnable to connect to {}".format(self._url))
                 raise ConnectionError
-
