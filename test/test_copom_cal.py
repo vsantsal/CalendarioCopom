@@ -46,7 +46,7 @@ def test_len_cenarios(stub_api, data_inicial, data_fim, resultado):
                          ])
 def test_has_events_cenarios(stub_api, data_inicial, data_fim, resultado):
     stub_api.get_data.return_value = range(resultado)
-    cenario = CopomCalendar(data_inicial, data_fim)
+    cenario = CopomCalendar(data_inicial, data_fim, stub_api)
     flag = cenario.has_new_events
     assert flag == resultado
 
