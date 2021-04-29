@@ -3,11 +3,11 @@ from api_reader import JsonApi
 
 
 class CopomCalendar:
-    def __init__(self, inicio_agenda: date, fim_agenda: date):
+    def __init__(self, inicio_agenda: date, fim_agenda: date, api=JsonApi()):
         # atribui data de início e fim para o calendário
         self._inicio_agenda, self._fim_agenda = inicio_agenda, fim_agenda
         self._url = ''
-        self._bacen_api = JsonApi()
+        self._bacen_api = api
         self._chave_conteudo = 'conteudo'
 
     def __len__(self):
@@ -45,11 +45,13 @@ class CopomCalendar:
 
     def _set_dados(self):
         self._url = self._set_url_api()
-        self._dados = self._bacen_api.get_data(self._url, self._chave_conteudo)
-
-    def _check_date_values(self):
-        if self._inicio_agenda > self._fim_agenda:
+        if self._check_date_values():
+            self._dados = self._bacen_api.get_data(self._url, self._chave_conteudo)
+        else:
             self._dados = {}
+
+    def _check_date_values(self) -> bool:
+        return self._inicio_agenda < self._fim_agenda
 
     def _set_url_api(self) -> str:
 

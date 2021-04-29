@@ -1,5 +1,11 @@
+from abc import ABC, abstractmethod
 import requests
-import json
+
+
+class RestApi(ABC):
+    @abstractmethod
+    def get_data(self, *args):
+        """método para retorno de dados."""
 
 
 class JsonApi:
@@ -19,15 +25,12 @@ class JsonApi:
         if self._url not in self._cache.keys():
 
             try:
-                response = requests.get(self._url)
-
-                if response.status_code == 200:
-                    json_data = json.loads(response.text)
-
-                    self._cache[self._url] = json_data[self._chave_outer_dict] \
-                        if self._chave_outer_dict \
-                        else json_data
+                response = requests.get(self._url).json()
 
             except requests.exceptions.ConnectionError:
                 print("Unnable to connect to {}".format(self._url))
                 raise ConnectionError
+            else:
+                self._cache[self._url] = response[self._chave_outer_dict] \
+                    if self._chave_outer_dict \
+                    else response
